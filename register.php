@@ -26,6 +26,7 @@
         // Response message
         if (!$wasSuccessful) {
             $msg['success'] = false;
+            $msg['errors'] = $account->getErrors();
         } else {
             $msg['success'] = true;
         }

@@ -22,6 +22,10 @@
 
         }
 
+        public function getErrors() {
+            return $this->errorArray;
+        }
+
         private function validateUsername($un) {
             if(strlen($un) > 25 || strlen($un) < 3) {
                 array_push($this->errorArray, "Your username must be between 3 and 25 characters");
@@ -33,14 +37,14 @@
 
         private function validateFirstName($fn) {
             if(strlen($fn) > 25 || strlen($fn) < 2) {
-                array_push($this->errorArray, "Your username must be between 2 and 25 characters");
+                array_push($this->errorArray, "Your First Name must be between 2 and 25 characters");
                 return;
             }
         }
 
         private function validateLastName($ln) {
             if(strlen($ln) > 25 || strlen($ln) < 2) {
-                array_push($this->errorArray, "Your username must be between 2 and 25 characters");
+                array_push($this->errorArray, "Your Last Name must be between 2 and 25 characters");
                 return;
             }
         }
