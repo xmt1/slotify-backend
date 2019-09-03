@@ -9,8 +9,9 @@
         
         // JSON data from front-end
         $data = json_decode(file_get_contents('php://input'), true);
+        $msg = [];
 
-        // Post variables -- sanitize first
+        // POST data -- sanitize first
         $username = sanitizeFormUsername($data['username']);
         $firstName = sanitizeFormString($data['firstName']);
         $lastName = sanitizeFormString($data['lastName']);
@@ -19,12 +20,21 @@
         $password = sanitizeFormPassword($data['password']);
         $password2 = sanitizeFormPassword($data['password2']);
 
-        $account->register($username, $firstName, $lastName, $email, $email2, $password, $password2);
+        // Backend validation check
+        $wasSuccessful = $account->register($username, $firstName, $lastName, $email, $email2, $password, $password2);
+
+        // Response message
+        if (!$wasSuccessful) {
+            $msg['success'] = false;
+        } else {
+            $msg['success'] = true;
+        }
+        
+        // Send back json to front-end
+        echo json_encode($msg);
 
         
 
-    } else {
-        echo "Nothing was posted";
     }
     
 ?>
