@@ -9,9 +9,11 @@
         private $passwordCharacters = "Your username must be between 5 and 30 characters";
         private $emailInvalid = "Email is invalid";
         private $emailsDoNotMatch = "Your emails don't match";
+        private $emailTaken = "This email already exists";
         private $lastNameCharacters = "Your Last Name must be between 2 and 25 characters";
         private $firstNameCharacters = "Your First Name must be between 2 and 25 characters";
         private $usernameCharacters = "Your username must be between 3 and 25 characters";
+        private $usernameTaken = "This username already exists";
         
 
         public function __construct($con) {
@@ -45,7 +47,14 @@
                 return;
             }
 
-            //TODO: check if username exists
+            $checkUsernameQuery = $this->con->prepare("SELECT username FROM users WHERE username = ?");
+            $checkUsernameQuery->execute([$un]);
+            $result = $checkUsernameQuery->fetchAll();
+
+            if (!empty($result)) {
+                $this->errorArray['usernameTaken'] = $this->usernameTaken;
+                return;
+            }
         }
 
         private function insertUserDetails($un, $fn, $ln, $em, $pw) {
@@ -82,7 +91,14 @@
                 return;
             }
 
-            //TODO: Check that email hasn't been used
+            $checkEmailQuery = $this->con->prepare("SELECT email FROM users WHERE email = ?");
+            $checkEmailQuery->execute([$em]);
+            $result = $checkEmailQuery->fetchAll();
+            
+            if (!empty($result)) {
+                $this->errorArray['emailTaken'] = $this->emailTaken;
+                return;
+            }
         }
 
         private function validatePasswords($pw, $pw2) {
