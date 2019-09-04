@@ -1,10 +1,11 @@
 <?php
     include('./util/cors.php');
+    include('./util/config.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include('./classes/Account.php');
         include('./util/sanitize.php');
-        $account = new Account();
+        $account = new Account($con); // $con set in config.php
 
         
         // JSON data from front-end

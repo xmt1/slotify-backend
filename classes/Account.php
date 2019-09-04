@@ -1,7 +1,9 @@
 <?php
     class Account {
+        private $con;
         private $errorArray;
 
+        // Form error messages
         private $passwordsDoNotMatch = "Your passwords don't match";
         private $passwordNotAlphanumeric = "Your passwords can only contain numbers and letters";
         private $passwordCharacters = "Your username must be between 5 and 30 characters";
@@ -12,8 +14,9 @@
         private $usernameCharacters = "Your username must be between 3 and 25 characters";
         
 
-        public function __construct() {
+        public function __construct($con) {
             $this->errorArray = array();
+            $this->con = $con;
         }
 
         public function register($un, $fn, $ln, $em, $em2, $pw, $pw2) {
@@ -25,7 +28,7 @@
 
             if (empty($this->errorArray)) {
                 // Insert into DB
-                return true;
+                return $this->insertUserDetails($un, $fn, $ln, $em, $pw);
             } else {
                 return false;
             }
@@ -43,6 +46,15 @@
             }
 
             //TODO: check if username exists
+        }
+
+        private function insertUserDetails($un, $fn, $ln, $em, $pw) {
+            $encryptedPw = md5($pw);
+            $profilePic = "assets/images/profile-pics/profile-pic.png";
+            $date = date("Y-m-d");
+
+            $statement = $this->con->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            return $statement->execute(['', $un, $fn, $ln, $em, $encryptedPw, $date, $profilePic]);
         }
 
         private function validateFirstName($fn) {
