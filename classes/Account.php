@@ -15,10 +15,27 @@
         private $usernameCharacters = "Your username must be between 3 and 25 characters";
         private $usernameTaken = "This username already exists";
         
+        private $loginFailed = "Your username or password was incorrect";
+        
 
         public function __construct($con) {
             $this->errorArray = array();
             $this->con = $con;
+        }
+
+        public function login($un, $pw) {
+            $encryptedPw = md5($pw);
+
+            $usernameQuery = $this->con->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+            $usernameQuery->execute([$un, $encryptedPw]);
+            $result = $usernameQuery->fetchAll();
+
+            if (empty($result)) {
+                $this->errorArray['loginFailed'] = $this->loginFailed;
+                return false;
+            } else {
+                return true;
+            }
         }
 
         public function register($un, $fn, $ln, $em, $em2, $pw, $pw2) {

@@ -1,12 +1,8 @@
 <?php
-    include('./util/cors.php');
-    include('./util/config.php');
+    include('./main.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        include('./classes/Account.php');
         include('./util/sanitize.php');
-        $account = new Account($con); // $con set in config.php
-
         
         // JSON data from front-end
         $data = json_decode(file_get_contents('php://input'), true);
@@ -34,8 +30,6 @@
         
         // Send back json to front-end
         echo json_encode($msg);
-
-        
 
     }
     
